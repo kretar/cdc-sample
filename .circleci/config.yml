@@ -5,4 +5,9 @@ jobs:
       - image: circleci/openjdk:latest
     steps:
       - checkout
+      - run:
+          name: Start contract repo
+          command: |
+            set -x
+            docker-compose up -d
       - run: mvn verify
