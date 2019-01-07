@@ -24,5 +24,5 @@ jobs:
                      ./cc-test-reporter before-build
                      mvn verify
             # upload test report to Code Climate using `after-build`
-                     ./cc-test-reporter after-build --coverage-input-type clover --exit-code $?
+                     ./cc-test-reporter after-build --coverage-input-type jacoco --exit-code $?
 
