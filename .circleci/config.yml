@@ -27,9 +27,9 @@ jobs:
                      mvn verify
                      cd consumer
                      JACOCO_SOURCE_PATH=src/main/java ../cc-test-reporter format-coverage target/site/jacoco/jacoco.xml --input-type jacoco
-                     ../cc-test-reporter upload-coverage -r consumer
+                     ../cc-test-reporter upload-coverage
                      cd ../provider
                      JACOCO_SOURCE_PATH=src/main/java ../cc-test-reporter format-coverage target/site/jacoco/jacoco.xml --input-type jacoco
-                     ../cc-test-reporter upload-coverage -r provider
+                     ../cc-test-reporter upload-coverage
 
 
