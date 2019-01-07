@@ -25,7 +25,8 @@ jobs:
                      mvn verify
             # upload test report to Code Climate using `after-build`
                      JACOCO_SOURCE_PATH=consumer/src/main/java ./cc-test-reporter format-coverage consumer/target/site/jacoco/jacoco.xml --input-type jacoco
+                     ./cc-test-reporter upload-coverage -r $CC_TEST_REPORTER_ID
                      JACOCO_SOURCE_PATH=provider/src/main/java ./cc-test-reporter format-coverage provider/target/site/jacoco/jacoco.xml --input-type jacoco
-                     ./cc-test-reporter upload-coverage
+                     ./cc-test-reporter upload-coverage -r $CC_TEST_REPORTER_ID
 
 
