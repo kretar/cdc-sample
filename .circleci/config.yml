@@ -23,10 +23,11 @@ jobs:
             # notify Code Climate of a pending test report using `before-build`
                      ./cc-test-reporter before-build
                      mvn verify
-            # upload test report to Code Climate using `after-build`
-                     JACOCO_SOURCE_PATH=consumer/src/main/java ./cc-test-reporter format-coverage consumer/target/site/jacoco/jacoco.xml --input-type jacoco
-                     ./cc-test-reporter upload-coverage -r $CC_TEST_REPORTER_ID
-                     JACOCO_SOURCE_PATH=provider/src/main/java ./cc-test-reporter format-coverage provider/target/site/jacoco/jacoco.xml --input-type jacoco
-                     ./cc-test-reporter upload-coverage -r $CC_TEST_REPORTER_ID
+                     cd consumer
+                     JACOCO_SOURCE_PATH=src/main/java ../cc-test-reporter format-coverage target/site/jacoco/jacoco.xml --input-type jacoco
+                     ../cc-test-reporter upload-coverage -r consumer
+                     cd ../provider
+                     JACOCO_SOURCE_PATH=src/main/java ../cc-test-reporter format-coverage target/site/jacoco/jacoco.xml --input-type jacoco
+                     ../cc-test-reporter upload-coverage -r provider
 
 
