@@ -10,4 +10,4 @@ jobs:
           command: |
             set -x
             docker-compose up -d
-      - run: docker-compose run --rm build mvn clean verify
+      - run: docker-compose run --rm builder mvn clean verify
