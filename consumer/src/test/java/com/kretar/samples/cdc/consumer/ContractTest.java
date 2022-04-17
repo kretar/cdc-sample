@@ -1,24 +1,23 @@
 package com.kretar.samples.cdc.consumer;
 
-import au.com.dius.pact.consumer.Pact;
-import au.com.dius.pact.consumer.PactProviderRuleMk2;
-import au.com.dius.pact.consumer.PactVerification;
 import au.com.dius.pact.consumer.dsl.PactDslWithProvider;
-import au.com.dius.pact.model.PactSpecVersion;
-import au.com.dius.pact.model.RequestResponsePact;
+import au.com.dius.pact.consumer.junit5.PactConsumerTestExt;
+import au.com.dius.pact.consumer.junit5.PactTestFor;
+import au.com.dius.pact.core.model.RequestResponsePact;
+import au.com.dius.pact.core.model.annotations.Pact;
 import com.google.common.collect.ImmutableMap;
 import io.pactfoundation.consumer.dsl.LambdaDsl;
-import org.junit.Assert;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.http.HttpStatus;
 
+@ExtendWith(PactConsumerTestExt.class)
+@PactTestFor(providerName = "petstore_api")
 public class ContractTest {
 
     private static final String UNKNOWN_PET_ID = "unknown";
     private static final String KNOWN_PET_ID = "known";
-    @Rule
-    public PactProviderRuleMk2 petstoreApi = new PactProviderRuleMk2("petstore_api", PactSpecVersion.V3, this);
 
     @Pact(consumer = "consumer")
     public RequestResponsePact createFragment(PactDslWithProvider builder) {
@@ -43,22 +42,21 @@ public class ContractTest {
                     });
                     a.stringType("name");
                     a.array("photoUrls", urls -> {});
-                    a.array("tags", tags -> {
+                    a.array("tags", tags ->
                         tags.object(tag -> {
                             tag.stringType("id");
                             tag.stringType("name");
-                        });
-                    });
+                        }));
                     a.stringType("status");
                 }).build())
                 .toPact();
     }
 
     @Test
-    @PactVerification(value="petstore_api", fragment="createFragment")
+    @PactTestFor(pactMethod = "createFragment")
     public void it_should_find_pet_by_id() {
-        PetService petService = new PetService(petstoreApi.getUrl());
-        Assert.assertFalse(petService.findById(UNKNOWN_PET_ID).isPresent());
-        Assert.assertTrue(petService.findById(KNOWN_PET_ID).isPresent());
+        PetService petService = new PetService("");
+        Assertions.assertFalse(petService.findById(UNKNOWN_PET_ID).isPresent());
+        Assertions.assertTrue(petService.findById(KNOWN_PET_ID).isPresent());
     }
 }

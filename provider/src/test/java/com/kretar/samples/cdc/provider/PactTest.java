@@ -1,17 +1,21 @@
 package com.kretar.samples.cdc.provider;
 
-import au.com.dius.pact.provider.junit.PactRunner;
 import au.com.dius.pact.provider.junit.Provider;
 import au.com.dius.pact.provider.junit.State;
 import au.com.dius.pact.provider.junit.loader.PactBroker;
-import au.com.dius.pact.provider.junit.target.HttpTarget;
 import au.com.dius.pact.provider.junit.target.Target;
 import au.com.dius.pact.provider.junit.target.TestTarget;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.runner.RunWith;
+import au.com.dius.pact.provider.junit5.HttpTestTarget;
+import au.com.dius.pact.provider.junit5.PactVerificationContext;
+import au.com.dius.pact.provider.junit5.PactVerificationInvocationContextProvider;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.TestTemplate;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,7 +24,6 @@ import org.springframework.context.annotation.Profile;
 import java.util.Map;
 import java.util.Optional;
 
-@RunWith(PactRunner.class)
 @Provider("petstore_api")
 @PactBroker(host="localhost",port="80")
 @Configuration
@@ -28,15 +31,25 @@ import java.util.Optional;
 public class PactTest {
     private static ConfigurableApplicationContext context;
 
-    @BeforeClass
+    @TestTemplate
+    @ExtendWith(PactVerificationInvocationContextProvider.class)
+    void pactVerificationTestTemplate(PactVerificationContext context) {
+        context.verifyInteraction();
+    }
+
+    @BeforeAll
     public static void startService() {
         context = new SpringApplicationBuilder().profiles("pact-test").sources(Application.class, PactTest.class).run();
     }
 
-    @TestTarget
-    public final Target target = new HttpTarget(8084);
+    @LocalServerPort
+    private int port;
+    @BeforeEach
+    void before(PactVerificationContext context) {
+        context.setTarget(new HttpTestTarget("localhost", port));
+    }
 
-    @AfterClass
+    @AfterAll
     public static void kill() {
         context.stop();
     }

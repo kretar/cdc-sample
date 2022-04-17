@@ -17,24 +17,23 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.0</version>
+            <version>1.18.22</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
-            <version>5.0.7.RELEASE</version>
+            <version>5.3.18</version>
         </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>[2.9.8,)</version>
-        </dependency>
-
-
         <dependency>
             <groupId>au.com.dius</groupId>
-            <artifactId>pact-jvm-consumer-java8_2.12</artifactId>
-            <version>3.5.13</version>
+            <artifactId>pact-jvm-consumer-java8</artifactId>
+            <version>4.0.10</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>au.com.dius</groupId>
+            <artifactId>pact-jvm-consumer-junit5</artifactId>
+            <version>4.0.10</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -43,8 +42,8 @@
         <plugins>
             <plugin>
                 <groupId>au.com.dius</groupId>
-                <artifactId>pact-jvm-provider-maven_2.12</artifactId>
-                <version>3.5.13</version>
+                <artifactId>pact-jvm-provider-maven</artifactId>
+                <version>4.0.10</version>
                 <configuration>
                     <pactBrokerUrl>http://localhost</pactBrokerUrl>
                 </configuration>
