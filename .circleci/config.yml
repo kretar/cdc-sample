@@ -3,7 +3,8 @@ jobs:
   build:
     environment:
       CC_TEST_REPORTER_ID: a60af70e1b483eb10c31b05c79be5384ac2b2d55138a20204feb716af8569840
-    machine: true
+    docker:
+      - image: cimg/openjdk:17.0.1
     steps:
       - checkout
       - run:
