@@ -1,6 +1,8 @@
 version: 2
 jobs:
   build:
+    machine: true
+    working_directory: ~/repo
     environment:
       CC_TEST_REPORTER_ID: a60af70e1b483eb10c31b05c79be5384ac2b2d55138a20204feb716af8569840
     docker:
