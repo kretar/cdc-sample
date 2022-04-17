@@ -3,6 +3,8 @@ version: '3'
 services:
   builder:
     image: cimg/openjdk:17.0.1
+    volumes:
+      - ./:/home/circleci/project
 
   postgres:
     image: postgres
