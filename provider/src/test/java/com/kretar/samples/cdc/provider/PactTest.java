@@ -3,8 +3,6 @@ package com.kretar.samples.cdc.provider;
 import au.com.dius.pact.provider.junit.Provider;
 import au.com.dius.pact.provider.junit.State;
 import au.com.dius.pact.provider.junit.loader.PactBroker;
-import au.com.dius.pact.provider.junit.target.Target;
-import au.com.dius.pact.provider.junit.target.TestTarget;
 import au.com.dius.pact.provider.junit5.HttpTestTarget;
 import au.com.dius.pact.provider.junit5.PactVerificationContext;
 import au.com.dius.pact.provider.junit5.PactVerificationInvocationContextProvider;
@@ -14,6 +12,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestTemplate;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -29,7 +29,7 @@ import java.util.Optional;
 @Configuration
 @Profile("pact-test")
 public class PactTest {
-    private static ConfigurableApplicationContext context;
+    private static ConfigurableApplicationContext springContext;
 
     @TestTemplate
     @ExtendWith(PactVerificationInvocationContextProvider.class)
@@ -39,19 +39,17 @@ public class PactTest {
 
     @BeforeAll
     public static void startService() {
-        context = new SpringApplicationBuilder().profiles("pact-test").sources(Application.class, PactTest.class).run();
+        springContext = new SpringApplicationBuilder().profiles("pact-test").sources(Application.class, PactTest.class).run();
     }
 
-    @LocalServerPort
-    private int port;
     @BeforeEach
     void before(PactVerificationContext context) {
-        context.setTarget(new HttpTestTarget("localhost", port));
+        context.setTarget(new HttpTestTarget("localhost", 8080));
     }
 
     @AfterAll
     public static void kill() {
-        context.stop();
+        springContext.stop();
     }
 
     @Bean
@@ -61,7 +59,7 @@ public class PactTest {
 
     @State("Known pets")
     public void knownPets(Map<String, Object> data) {
-        PetRepository petRepository = context.getBean("petRepository", PetRepository.class);
+        PetRepository petRepository = springContext.getBean("petRepository", PetRepository.class);
         String knownPetId = data.get("KNOWN_PET_ID").toString();
 
         Optional<Pet> optionalPet = buildOptionalPet(knownPetId);

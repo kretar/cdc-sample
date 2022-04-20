@@ -13,7 +13,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.http.HttpStatus;
 
 @ExtendWith(PactConsumerTestExt.class)
-@PactTestFor(providerName = "petstore_api")
+@PactTestFor(providerName = "petstore_api", port="8084")
 public class ContractTest {
 
     private static final String UNKNOWN_PET_ID = "unknown";
@@ -28,7 +28,6 @@ public class ContractTest {
                 .path("/pets/" + UNKNOWN_PET_ID)
                 .willRespondWith()
                 .status(HttpStatus.NOT_FOUND.value())
-                .body("{\"error\":\"Not Found\"}")
                 .uponReceiving("A request for the first page of pets")
                 .method("GET")
                 .path("/pets/" + KNOWN_PET_ID)
@@ -55,7 +54,7 @@ public class ContractTest {
     @Test
     @PactTestFor(pactMethod = "createFragment")
     public void it_should_find_pet_by_id() {
-        PetService petService = new PetService("");
+        PetService petService = new PetService("http://localhost:8084");
         Assertions.assertFalse(petService.findById(UNKNOWN_PET_ID).isPresent());
         Assertions.assertTrue(petService.findById(KNOWN_PET_ID).isPresent());
     }
