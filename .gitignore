@@ -25,3 +25,8 @@ hs_err_pid*
 # IntelliJ config files
 .idea/
 *.iml
+
+/*/target/
+/*/build/
+.gradle/
+

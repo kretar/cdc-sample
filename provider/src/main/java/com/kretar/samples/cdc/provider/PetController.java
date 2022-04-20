@@ -17,6 +17,9 @@ public class PetController {
 
     @GetMapping("/pets/{id}")
     public Pet findById(@PathVariable String id) {
-        return petRepository.findById(id).orElseThrow(ResourceNotFoundException::new);
+        System.out.println("Looking for a pet");
+        Pet pet = petRepository.findById(id).orElseThrow(ResourceNotFoundException::new);
+        System.out.println("Found myself a pet:" + pet.getId());
+        return pet;
     }
 }
